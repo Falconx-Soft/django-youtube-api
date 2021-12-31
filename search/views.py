@@ -12,13 +12,13 @@ def index(request):
         search_url = 'https://www.googleapis.com/youtube/v3/search'
         video_url = 'https://www.googleapis.com/youtube/v3/videos'
 
-        searchValue = request.POST['search_name']+" "+request.POST['search_type']+" "+request.POST['search_year']
+        searchValue = request.POST['search_type']+" "+request.POST['search_year']
 
         search_params = {
             'part' : 'snippet',
             'q' : searchValue,
             'key' : settings.YOUTUBE_DATA_API_KEY,
-            'maxResults' : 9,
+            'maxResults' : 1,
             'type' : 'video'
         }
 

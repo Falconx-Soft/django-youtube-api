@@ -37,10 +37,9 @@
       <form method="POST">
       <div class="input-group mb-3">
           {% csrf_token %}
-          <input type="text" name="search_name" class="form-control" aria-label="Username" placeholder="Enter name">
-          <div class="dropdown">
+          <div class="dropdown" style="width: 50%;">
             <div class="dropbtn" id="dropDiv">Select Type</div>
-            <div class="dropdown-content">
+            <div class="dropdown-content" style="width:100%;">
               <a id="searchItem">Rock</a>
               <a id="searchItem">Metal</a>
               <a id="searchItem">Latin</a>
@@ -71,7 +70,7 @@
 
   <div class="album py-5 bg-light">
     <div class="container">
-      <div class="row">
+      <div class="row" style="justify-content: center;">
         {% for video in videos %}
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
