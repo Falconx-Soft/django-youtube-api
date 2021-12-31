@@ -4,6 +4,8 @@ from isodate import parse_duration
 
 from django.conf import settings
 from django.shortcuts import render, redirect
+from random import randrange
+import random
 
 def index(request):
     videos = []
@@ -11,14 +13,25 @@ def index(request):
     if request.method == 'POST':
         search_url = 'https://www.googleapis.com/youtube/v3/search'
         video_url = 'https://www.googleapis.com/youtube/v3/videos'
+        year = 2020
+        keyWord = ""
+        if(request.POST['search_year']):
+            year = request.POST['search_year']
+        else:
+            year = random.randint(1920, 2020)
 
-        searchValue = request.POST['search_type']+" "+request.POST['search_year']
-
+        if(request.POST['search_type']):
+            keyWord = request.POST['search_type']
+        else:
+            temp = random.randint(0, 13)
+            listOfWords = ['Rock','Metal','Latin','R&B','Soul','Flok','Blues','World','Classical','Jazz','New age','Pop','Country','Mariachi']
+            keyWord = listOfWords[temp]
+        searchValue = keyWord+" music "+str(year)
         search_params = {
             'part' : 'snippet',
             'q' : searchValue,
             'key' : settings.YOUTUBE_DATA_API_KEY,
-            'maxResults' : 1,
+            'maxResults' : 9,
             'type' : 'video'
         }
 
@@ -43,17 +56,16 @@ def index(request):
 
         results = r.json()['items']
 
-        
-        for result in results:
-            video_data = {
-                'title' : result['snippet']['title'],
-                'id' : result['id'],
-                'url' : f'https://www.youtube.com/watch?v={ result["id"] }',
-                'duration' : int(parse_duration(result['contentDetails']['duration']).total_seconds() // 60),
-                'thumbnail' : result['snippet']['thumbnails']['high']['url']
-            }
+        rNumber = randrange(len(results))
+        video_data = {
+            'title' : results[rNumber]['snippet']['title'],
+            'id' : results[rNumber]['id'],
+            'url' : f'https://www.youtube.com/watch?v={ results[rNumber]["id"] }',
+            'duration' : int(parse_duration(results[rNumber]['contentDetails']['duration']).total_seconds() // 60),
+            'thumbnail' : results[rNumber]['snippet']['thumbnails']['high']['url']
+        }
 
-            videos.append(video_data)
+        videos.append(video_data)
 
     context = {
         'videos' : videos
